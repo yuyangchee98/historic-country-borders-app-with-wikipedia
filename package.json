@@ -9,6 +9,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@mapbox/mapbox-gl-draw": "^1.2.0",
     "@octokit/core": "^3.2.5",
     "@react-hook/window-size": "3.0.7",
     "@types/geojson": "7946.0.7",
@@ -22,6 +23,7 @@
     "react-ga": "^3.3.0",
     "react-horizontal-timeline": "1.5.3",
     "react-mapbox-gl": "5.1.1",
+    "react-mapbox-gl-draw": "^2.0.4",
     "react-tooltip": "^4.2.13",
     "string-to-color": "2.2.2",
     "worker-loader": "^3.0.7"
