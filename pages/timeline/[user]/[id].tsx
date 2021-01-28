@@ -15,6 +15,7 @@ import useKeyPress from '../../../hooks/useKeyPress';
 import { GetServerSideProps } from 'next';
 import { Octokit } from '@octokit/core';
 import { ConfigType, GithubFileInfoType } from '../../../util/types';
+import Layout from '../../../components/Layout';
 
 ReactGA.initialize('UA-188190791-1');
 
@@ -38,7 +39,11 @@ const Viewer = ({ years, user, id, config }: DataProps) => {
   const dPress = useKeyPress('d');
 
   useEffect(() => {
-    ReactGA.pageview('/home');
+    if ([user, id].some((x) => !x)) {
+      ReactGA.pageview(`/no-data`);
+    } else {
+      ReactGA.pageview(`/timeline/${user}/${id}`);
+    }
     setMounted(true);
   }, []);
 
@@ -54,48 +59,61 @@ const Viewer = ({ years, user, id, config }: DataProps) => {
     }
   }, [aPress]);
 
+  if ([years, user, id, config].some((x) => !x))
+    return <div>Not a valid timeline. Check your url.</div>;
+
   return (
     <>
-      {mounted && (
-        <ReactTooltip
-          resizeHide={false}
-          id="fullscreenTip"
-          place="left"
-          effect="solid"
-          globalEventOff={isMobile ? 'click' : undefined}
-        >
-          {hide ? 'Show Timeline' : 'Hide Timeline'}
-        </ReactTooltip>
-      )}
-      <div
-        data-tip
-        data-for="fullscreenTip"
-        data-delay-show="300"
-        className="fullscreen"
-        onClick={() => setHide(!hide)}
-        style={{ top: hide ? '16px' : '165px' }}
+      <Layout
+        title={config.name}
+        url={`https://historyborders.app/timeline/${user}/${id}`}
+        description={config.description}
       >
-        <div className="noselect">🔭</div>
-      </div>
-      <div className={`${hide ? 'app-large' : 'app'}`}>
-        {!hide && (
-          <>
-            <NavBar
-              onHelp={() => setHelp(!help)}
-              showHelp={help}
-              title={config.name}
-            />
-            <Timeline index={index} onChange={setIndex} years={years} />
-          </>
+        {mounted && (
+          <ReactTooltip
+            resizeHide={false}
+            id="fullscreenTip"
+            place="left"
+            effect="solid"
+            globalEventOff={isMobile ? 'click' : undefined}
+          >
+            {hide ? 'Show Timeline' : 'Hide Timeline'}
+          </ReactTooltip>
         )}
-        <MapContainer
-          year={convertYearString(mapBCFormat, years[index])}
-          fullscreen={hide}
-          user={user}
-          id={id}
-        />
-        {!hide && <Footer />}
-      </div>
+        <div
+          data-tip
+          data-for="fullscreenTip"
+          data-delay-show="300"
+          className="fullscreen"
+          onClick={() => setHide(!hide)}
+          style={{ top: hide ? '16px' : '165px' }}
+        >
+          <div className="noselect">🔭</div>
+        </div>
+        <div className={`${hide ? 'app-large' : 'app'}`}>
+          {!hide && (
+            <>
+              <NavBar
+                onHelp={() => setHelp(!help)}
+                showHelp={help}
+                title={config.name}
+              />
+              <Timeline index={index} onChange={setIndex} years={years} />
+            </>
+          )}
+          <MapContainer
+            year={convertYearString(mapBCFormat, years[index])}
+            fullscreen={hide}
+            user={user}
+            id={id}
+          />
+          {!hide && (
+            <Footer
+              dataUrl={`https://github.com/${user}/historicborders-${id}`}
+            />
+          )}
+        </div>
+      </Layout>
     </>
   );
 };
