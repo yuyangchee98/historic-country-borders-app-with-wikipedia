@@ -8,69 +8,13 @@ import type {
 import { useEffect, useState } from 'react';
 import stc from 'string-to-color';
 import polylabel from 'polylabel';
-import { yearPrefix } from '../util/constants';
-
-export interface CountryData {
-  labels: FeatureCollection;
-  borders: FeatureCollection;
-}
+import { processData, yearPrefix } from '../util/constants';
+import { CountryData } from '../util/types';
 
 export const useData = (year: string, user: string, id: string) => {
   const [isLoading, setIsLoading] = useState(true);
   const [url, setUrl] = useState<string | undefined>(undefined);
   const [data, setData] = useState<CountryData | undefined>(undefined);
-
-  const processData = (data: FeatureCollection) => {
-    const dataNoUnclaimed = {
-      ...data,
-      features: data.features.filter(
-        (f) => f.properties?.NAME != null && f.properties?.NAME != 'unclaimed',
-      ),
-    };
-    const featureParts = dataNoUnclaimed.features.map((feature) => {
-      const name = feature.properties?.NAME ?? 'unclaimed';
-      const color = stc(name);
-      const labels = (feature.geometry as MultiPolygon).coordinates
-        .map((x) => polylabel(x))
-        .map((x) => ({
-          geometry: {
-            type: 'Point',
-            coordinates: x,
-          } as Point,
-          properties: {
-            ...feature.properties,
-            NAME: name,
-            COLOR: color,
-          } as GeoJsonProperties,
-        })) as Feature[];
-
-      const bounds = {
-        geometry: feature.geometry,
-        properties: {
-          ...feature.properties,
-          COLOR: color,
-          NAME: name,
-        } as GeoJsonProperties,
-      } as Feature;
-      return {
-        bounds,
-        labels,
-      };
-    });
-    const labelCol = {
-      ...data,
-      //@ts-ignore
-      features: featureParts.map((x) => x.labels).flat(1),
-    } as FeatureCollection;
-    const boundCol = {
-      ...data,
-      features: featureParts.map((x) => x.bounds),
-    } as FeatureCollection;
-    return {
-      labels: labelCol,
-      borders: boundCol,
-    } as CountryData;
-  };
 
   useEffect(() => {
     if (year) {

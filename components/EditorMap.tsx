@@ -7,8 +7,10 @@ import DrawControl from '../thirdParty/react-mapbox-gl-draw';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
+import useEditorMap from '../state/useEditorMap';
 
 const MapContainer = () => {
+  const [data] = useEditorMap();
   const [zoomValue, setZoomValue] = useState(2);
   const mapRef = useRef<MapboxGl.Map | undefined>(undefined);
   const drawControlRef = useRef<DrawControl>(null);
@@ -38,6 +40,35 @@ const MapContainer = () => {
           setZoomValue(map.getZoom());
         }}
       >
+        {data && (
+          <>
+            <GeoJSONLayer
+              data={data.borders}
+              fillPaint={{
+                'fill-color': ['get', 'COLOR'],
+                'fill-opacity': 0.5,
+              }}
+            />
+            <GeoJSONLayer
+              data={data.labels}
+              symbolLayout={{
+                'text-field': '{NAME}',
+                'text-font': ['Lato Bold'],
+                'text-size': {
+                  base: 1,
+                  stops: [
+                    [12, 12],
+                    [16, 16],
+                  ],
+                },
+                'text-padding': 3,
+                'text-letter-spacing': 0.1,
+                'text-max-width': 7,
+                'text-transform': 'uppercase',
+              }}
+            />
+          </>
+        )}
         <DrawControl
           ref={drawControlRef}
           controls={{

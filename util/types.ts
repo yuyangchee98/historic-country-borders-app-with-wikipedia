@@ -1,3 +1,5 @@
+import { FeatureCollection } from 'geojson';
+
 export interface GithubFileInfoType {
   name: string;
   path: string;
@@ -15,4 +17,9 @@ export enum FileType {
 export interface ConfigType {
   name: string;
   description?: string;
+}
+
+export interface CountryData {
+  labels: FeatureCollection;
+  borders: FeatureCollection;
 }
