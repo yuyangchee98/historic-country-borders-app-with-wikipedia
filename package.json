@@ -14,6 +14,7 @@
     "@types/geojson": "7946.0.7",
     "@types/mapbox-gl": "2.0.3",
     "@types/polylabel": "1.0.5",
+    "cesium": "^1.77.0",
     "mapbox-gl": "^2.0.1",
     "next": "latest",
     "polylabel": "1.1.0",
@@ -23,6 +24,7 @@
     "react-horizontal-timeline": "1.5.3",
     "react-mapbox-gl": "5.1.1",
     "react-tooltip": "^4.2.13",
+    "resium": "^1.13.1",
     "string-to-color": "2.2.2",
     "worker-loader": "^3.0.7"
   },
@@ -30,6 +32,9 @@
     "@types/node": "^12.12.21",
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
+    "copy-webpack-plugin": "^5.1.2",
+    "html-webpack-plugin": "^4.5.1",
+    "html-webpack-tags-plugin": "^2.0.17",
     "typescript": "4.0"
   }
 }

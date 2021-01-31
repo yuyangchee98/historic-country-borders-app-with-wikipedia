@@ -1,4 +1,5 @@
 import MapContainer from '../../../components/ViewerMap';
+import GlobeContainer from '../../../components/Viewer3dMap';
 import React, { useEffect, useState } from 'react';
 import ReactGA from 'react-ga';
 import {
@@ -14,7 +15,7 @@ import ReactTooltip from 'react-tooltip';
 import useKeyPress from '../../../hooks/useKeyPress';
 import { GetServerSideProps } from 'next';
 import { Octokit } from '@octokit/core';
-import { ConfigType, GithubFileInfoType } from '../../../util/types';
+import { ConfigType, GithubFileInfoType, MapType } from '../../../util/types';
 import Layout from '../../../components/Layout';
 
 ReactGA.initialize('UA-188190791-1');
@@ -37,6 +38,7 @@ const Viewer = ({ years, user, id, config }: DataProps) => {
       : false;
   const aPress = useKeyPress('a');
   const dPress = useKeyPress('d');
+  const [mapType, setMapType] = useState<MapType>(MapType.Flat);
 
   useEffect(() => {
     if ([user, id].some((x) => !x)) {
@@ -90,6 +92,17 @@ const Viewer = ({ years, user, id, config }: DataProps) => {
         >
           <div className="noselect">🔭</div>
         </div>
+        <div
+          className="map-type"
+          onClick={() =>
+            setMapType(mapType === MapType.Flat ? MapType.ThreeD : MapType.Flat)
+          }
+          style={{ top: hide ? '76px' : '230px' }}
+        >
+          <div className="noselect">
+            {mapType === MapType.Flat ? '🌏' : '🗺'}
+          </div>
+        </div>
         <div className={`${hide ? 'app-large' : 'app'}`}>
           {!hide && (
             <>
@@ -101,12 +114,21 @@ const Viewer = ({ years, user, id, config }: DataProps) => {
               <Timeline index={index} onChange={setIndex} years={years} />
             </>
           )}
-          <MapContainer
-            year={convertYearString(mapBCFormat, years[index])}
-            fullscreen={hide}
-            user={user}
-            id={id}
-          />
+          {mapType === MapType.Flat ? (
+            <MapContainer
+              year={convertYearString(mapBCFormat, years[index])}
+              fullscreen={hide}
+              user={user}
+              id={id}
+            />
+          ) : (
+            <GlobeContainer
+              year={convertYearString(mapBCFormat, years[index])}
+              fullscreen={hide}
+              user={user}
+              id={id}
+            />
+          )}
           {!hide && (
             <Footer
               dataUrl={`https://github.com/${user}/historicborders-${id}`}

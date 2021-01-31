@@ -16,3 +16,8 @@ export interface ConfigType {
   name: string;
   description?: string;
 }
+
+export enum MapType {
+  ThreeD,
+  Flat,
+}
