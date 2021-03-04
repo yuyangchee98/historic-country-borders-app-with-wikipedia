@@ -11,6 +11,7 @@ import {
 import Footer from '../../../components/Footer';
 import NavBar from '../../../components/NavBar';
 import Timeline from '../../../components/Timeline';
+import Wiki from '../../../components/Wiki'
 import ReactTooltip from 'react-tooltip';
 import useKeyPress from '../../../hooks/useKeyPress';
 import { GetServerSideProps } from 'next';
@@ -145,6 +146,7 @@ const Viewer = ({
             id={id}
             threeD={isGlobe}
           />
+          <Wiki />
           {!hide && (
             <Footer
               dataUrl={`https://github.com/${user}/historicborders-${id}`}

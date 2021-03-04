@@ -21,10 +21,37 @@ body {
 
 .app {
   display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 50px 100px auto 50px;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50px 100px auto auto 50px;
+  grid-template-areas:
+      "a a"
+      "b b"
+      "c d"
+      "c d"
+      "e e";
   align-items: stretch;
   height: 100%;
+  width:100%
+}
+
+.nav-bar {
+  grid-area: a;
+}
+
+.timeline {
+  grid-area: b;
+}
+
+.map-grid {
+  grid-area: c;
+}
+
+.wiki {
+  grid-area: d;
+}
+
+.footer {
+  grid-area: e;
 }
 
 .fullscreen {
